@@ -1,0 +1,5 @@
+name: SysoutCatcher
+version: ${project.version}
+main: net.draycia.sysoutcatcher.SysoutCatcher
+api-version: 1.13
+load: STARTUP
