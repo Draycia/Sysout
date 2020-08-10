@@ -6,13 +6,14 @@ import java.io.PrintStream;
 
 public final class SysoutCatcher extends JavaPlugin {
 
+    private static final StackWalker stackWalker = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
+
     public SysoutCatcher() {
         PrintStream myStream = new PrintStream(System.out) {
             @Override
             public void println(String line) {
 
                 try {
-                    StackWalker stackWalker = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
                     Class<?> caller = stackWalker.getCallerClass();
                     JavaPlugin.getProvidingPlugin(caller).getLogger().info(line);
                 } catch (IllegalArgumentException e) {
