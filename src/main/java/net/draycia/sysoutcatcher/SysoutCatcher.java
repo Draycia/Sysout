@@ -15,7 +15,14 @@ public final class SysoutCatcher extends JavaPlugin {
 
                 try {
                     Class<?> caller = stackWalker.getCallerClass();
-                    JavaPlugin.getProvidingPlugin(caller).getLogger().info(line);
+
+                    StringBuilder messageBuilder = new StringBuilder();
+                    if (getConfig().getBoolean("IncludeSourceClass", false)) {
+                        messageBuilder.append('(').append(caller.getName()).append(") ");
+                    }
+                    messageBuilder.append(line);
+
+                    JavaPlugin.getProvidingPlugin(caller).getLogger().info(messageBuilder.toString());
                 } catch (IllegalArgumentException e) {
                     StackTraceElement element = new Exception().getStackTrace()[2];
                     super.printf("(%s:%d) %s\n", element.getClassName(), element.getLineNumber(), line);
@@ -25,6 +32,11 @@ public final class SysoutCatcher extends JavaPlugin {
         };
 
         System.setOut(myStream);
+    }
+
+    @Override
+    public void onEnable() {
+        this.saveDefaultConfig();
     }
 
 }
