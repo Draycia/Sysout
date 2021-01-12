@@ -17,9 +17,14 @@ public final class SysoutCatcher extends JavaPlugin {
                     Class<?> caller = stackWalker.getCallerClass();
 
                     StringBuilder messageBuilder = new StringBuilder();
+
                     if (getConfig().getBoolean("IncludeSourceClass", false)) {
                         messageBuilder.append('(').append(caller.getName()).append(") ");
                     }
+                    if (getConfig().getBoolean("IncludeSourceLine", false)) {
+                        messageBuilder.append('(').append(new Exception().getStackTrace()[2].getLineNumber()).append(") ");
+                    }
+
                     messageBuilder.append(line);
 
                     JavaPlugin.getProvidingPlugin(caller).getLogger().info(messageBuilder.toString());
