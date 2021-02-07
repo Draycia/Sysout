@@ -3,7 +3,6 @@ package net.draycia.sysoutcatcher;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.PrintStream;
-import java.lang.invoke.MethodHandles;
 
 public final class SysoutCatcher extends JavaPlugin {
 
@@ -11,14 +10,15 @@ public final class SysoutCatcher extends JavaPlugin {
         PrintStream wrappedOut = new PrintStream(System.out) {
             @Override
             public void println(String line) {
-
+                StackTraceElement element = Thread.currentThread().getStackTrace()[2];
                 try {
-                    Class<?> caller = MethodHandles.lookup().lookupClass();
+                    Class<?> clazz = Class.forName(element.getClassName());
+                    JavaPlugin plugin = JavaPlugin.getProvidingPlugin(clazz);
 
                     StringBuilder messageBuilder = new StringBuilder();
 
                     if (getConfig().getBoolean("IncludeSourceClass", false)) {
-                        messageBuilder.append('(').append(caller.getName()).append(") ");
+                        messageBuilder.append('(').append(element.getClassName()).append(") ");
                     }
                     if (getConfig().getBoolean("IncludeSourceLine", false)) {
                         messageBuilder.append('(').append(new Exception().getStackTrace()[2].getLineNumber()).append(") ");
@@ -26,26 +26,25 @@ public final class SysoutCatcher extends JavaPlugin {
 
                     messageBuilder.append(line);
 
-                    JavaPlugin.getProvidingPlugin(caller).getLogger().info(messageBuilder.toString());
-                } catch (IllegalArgumentException e) {
-                    StackTraceElement element = new Exception().getStackTrace()[2];
+                    plugin.getLogger().info(line);
+                } catch (ClassNotFoundException e) {
                     super.printf("(%s:%d) %s\n", element.getClassName(), element.getLineNumber(), line);
                 }
-
             }
         };
 
         PrintStream wrappedErr = new PrintStream(System.err) {
             @Override
             public void println(String line) {
-
+                StackTraceElement element = Thread.currentThread().getStackTrace()[2];
                 try {
-                    Class<?> caller = MethodHandles.lookup().lookupClass();
+                    Class<?> clazz = Class.forName(element.getClassName());
+                    JavaPlugin plugin = JavaPlugin.getProvidingPlugin(clazz);
 
                     StringBuilder messageBuilder = new StringBuilder();
 
                     if (getConfig().getBoolean("IncludeSourceClass", false)) {
-                        messageBuilder.append('(').append(caller.getName()).append(") ");
+                        messageBuilder.append('(').append(element.getClassName()).append(") ");
                     }
                     if (getConfig().getBoolean("IncludeSourceLine", false)) {
                         messageBuilder.append('(').append(new Exception().getStackTrace()[2].getLineNumber()).append(") ");
@@ -53,12 +52,10 @@ public final class SysoutCatcher extends JavaPlugin {
 
                     messageBuilder.append(line);
 
-                    JavaPlugin.getProvidingPlugin(caller).getLogger().severe(messageBuilder.toString());
-                } catch (IllegalArgumentException e) {
-                    StackTraceElement element = Thread.currentThread().getStackTrace()[2];
+                    plugin.getLogger().warning(line);
+                } catch (ClassNotFoundException e) {
                     super.printf("(%s:%d) %s\n", element.getClassName(), element.getLineNumber(), line);
                 }
-
             }
         };
 
