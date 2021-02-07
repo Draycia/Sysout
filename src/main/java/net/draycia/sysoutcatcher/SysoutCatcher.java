@@ -3,10 +3,9 @@ package net.draycia.sysoutcatcher;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.PrintStream;
+import java.lang.invoke.MethodHandles;
 
 public final class SysoutCatcher extends JavaPlugin {
-
-    private static final StackWalker stackWalker = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
 
     public SysoutCatcher() {
         PrintStream wrappedOut = new PrintStream(System.out) {
@@ -14,7 +13,7 @@ public final class SysoutCatcher extends JavaPlugin {
             public void println(String line) {
 
                 try {
-                    Class<?> caller = stackWalker.getCallerClass();
+                    Class<?> caller = MethodHandles.lookup().lookupClass();
 
                     StringBuilder messageBuilder = new StringBuilder();
 
@@ -41,7 +40,7 @@ public final class SysoutCatcher extends JavaPlugin {
             public void println(String line) {
 
                 try {
-                    Class<?> caller = stackWalker.getCallerClass();
+                    Class<?> caller = MethodHandles.lookup().lookupClass();
 
                     StringBuilder messageBuilder = new StringBuilder();
 
