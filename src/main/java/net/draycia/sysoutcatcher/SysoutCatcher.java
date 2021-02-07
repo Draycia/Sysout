@@ -55,7 +55,7 @@ public final class SysoutCatcher extends JavaPlugin {
 
                     JavaPlugin.getProvidingPlugin(caller).getLogger().severe(messageBuilder.toString());
                 } catch (IllegalArgumentException e) {
-                    StackTraceElement element = new Exception().getStackTrace()[2];
+                    StackTraceElement element = Thread.currentThread().getStackTrace()[2];
                     super.printf("(%s:%d) %s\n", element.getClassName(), element.getLineNumber(), line);
                 }
 
