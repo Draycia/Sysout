@@ -27,7 +27,7 @@ public final class SysoutCatcher extends JavaPlugin {
                     messageBuilder.append(line);
 
                     plugin.getLogger().info(messageBuilder.toString());
-                } catch (ClassNotFoundException e) {
+                } catch (ClassNotFoundException | IllegalArgumentException e) {
                     super.printf("(%s:%d) %s\n", element.getClassName(), element.getLineNumber(), line);
                 }
             }
@@ -53,7 +53,7 @@ public final class SysoutCatcher extends JavaPlugin {
                     messageBuilder.append(line);
 
                     plugin.getLogger().info(messageBuilder.toString());
-                } catch (ClassNotFoundException e) {
+                } catch (ClassNotFoundException | IllegalArgumentException e) {
                     super.printf("(%s:%d) %s\n", element.getClassName(), element.getLineNumber(), line);
                 }
             }
