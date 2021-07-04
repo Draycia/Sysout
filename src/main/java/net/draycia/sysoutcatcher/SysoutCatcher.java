@@ -64,7 +64,7 @@ public final class SysoutCatcher extends JavaPlugin {
                     messageBuilder.append(line);
 
                     // Instead of just printing the message, send it to the plugin's logger
-                    plugin.getLogger().info(messageBuilder.toString());
+                    plugin.getLogger().severe(messageBuilder.toString());
                 } catch (ClassNotFoundException | IllegalArgumentException e) {
                     // If anything happens, the calling class doesn't exist, there is no JavaPlugin that "owns" the calling class, etc
                     // Just print out normally, with some added information
